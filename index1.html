@@ -1,0 +1,370 @@
+# Binomial Distribution Lab — Prompt 3
+
+Replace your existing HTML with the following complete code.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Binomial Distribution Lab</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f6fb;
+      margin: 0;
+      padding: 30px 16px;
+      color: #1e293b;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .header {
+      background: #173b75;
+      color: white;
+      padding: 28px;
+      border-radius: 14px;
+      margin-bottom: 24px;
+    }
+
+    .header h1 {
+      margin: 0 0 8px;
+    }
+
+    .header p {
+      margin: 0;
+      color: #dbeafe;
+      line-height: 1.5;
+    }
+
+    .panel {
+      background: white;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 3px 12px rgba(15, 23, 42, 0.06);
+      margin-bottom: 24px;
+    }
+
+    h2 {
+      margin-top: 0;
+      color: #173b75;
+    }
+
+    .inputs {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #cbd5e1;
+      border-radius: 7px;
+    }
+
+    input:focus {
+      outline: 2px solid #93c5fd;
+      border-color: #2563eb;
+    }
+
+    .error {
+      color: #dc2626;
+      font-size: 13px;
+      margin-top: 7px;
+      min-height: 16px;
+    }
+
+    .selected {
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 8px;
+      background: #eff6ff;
+      line-height: 1.9;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .stat-card {
+      padding: 20px;
+      border-radius: 10px;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 3px 10px rgba(15, 23, 42, 0.04);
+    }
+
+    .stat-card:last-child {
+      grid-column: 1 / -1;
+    }
+
+    .stat-label {
+      font-size: 14px;
+      color: #64748b;
+      margin-bottom: 10px;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: bold;
+      color: #173b75;
+      overflow-wrap: anywhere;
+    }
+
+    .formula {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #64748b;
+    }
+
+    .status {
+      color: #15803d;
+      font-weight: 600;
+      margin-top: 14px;
+    }
+
+    @media (min-width: 650px) {
+      .stats {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .stat-card:last-child {
+        grid-column: auto;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .inputs,
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .stat-card:last-child {
+        grid-column: auto;
+      }
+
+      .header,
+      .panel {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+
+    <header class="header">
+      <h1>Binomial Distribution Lab</h1>
+      <p>
+        Explore the statistical properties of a binomial
+        random variable by changing the number of trials
+        and probability of success.
+      </p>
+    </header>
+
+    <section class="panel">
+      <h2>1. Distribution Parameters</h2>
+
+      <div class="inputs">
+        <div>
+          <label for="trials">Number of trials (n)</label>
+          <input
+            type="number"
+            id="trials"
+            value="20"
+            min="1"
+            step="1"
+            required
+          >
+          <div id="nError" class="error" aria-live="polite"></div>
+        </div>
+
+        <div>
+          <label for="probability">
+            Probability of success (p)
+          </label>
+          <input
+            type="number"
+            id="probability"
+            value="0.35"
+            min="0"
+            max="1"
+            step="any"
+            required
+          >
+          <div id="pError" class="error" aria-live="polite"></div>
+        </div>
+      </div>
+
+      <div class="selected">
+        <strong>Selected Parameters</strong><br>
+        Number of trials (n): <span id="displayN">20</span><br>
+        Probability of success (p): <span id="displayP">0.35</span>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>2. Binomial Statistics</h2>
+
+      <div class="stats">
+        <article class="stat-card">
+          <div class="stat-label">Mean E[X]</div>
+          <div class="stat-value" id="mean">7.000000</div>
+          <div class="formula">np</div>
+        </article>
+
+        <article class="stat-card">
+          <div class="stat-label">Variance Var(X)</div>
+          <div class="stat-value" id="variance">4.550000</div>
+          <div class="formula">np(1 − p)</div>
+        </article>
+
+        <article class="stat-card">
+          <div class="stat-label">Standard Deviation</div>
+          <div class="stat-value" id="stdDev">2.133073</div>
+          <div class="formula">√Variance</div>
+        </article>
+
+        <article class="stat-card">
+          <div class="stat-label">Second Moment E[X²]</div>
+          <div class="stat-value" id="secondMoment">53.550000</div>
+          <div class="formula">Variance + Mean²</div>
+        </article>
+
+        <article class="stat-card">
+          <div class="stat-label">Skewness</div>
+          <div class="stat-value" id="skewness">0.140028</div>
+          <div class="formula">(1 − 2p) / √(np(1 − p))</div>
+        </article>
+      </div>
+
+      <div id="status" class="status" aria-live="polite">
+        Statistics calculated successfully.
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    const nInput = document.getElementById("trials");
+    const pInput = document.getElementById("probability");
+
+    function formatNumber(value) {
+      if (!Number.isFinite(value)) return "Undefined";
+      return value.toFixed(6);
+    }
+
+    function validateAndCalculate() {
+      const nRaw = nInput.value.trim();
+      const pRaw = pInput.value.trim();
+
+      const n = Number(nRaw);
+      const p = Number(pRaw);
+
+      const validN =
+        nRaw !== "" &&
+        Number.isSafeInteger(n) &&
+        n > 0;
+
+      const validP =
+        pRaw !== "" &&
+        Number.isFinite(p) &&
+        p >= 0 &&
+        p <= 1;
+
+      document.getElementById("nError").textContent =
+        validN ? "" : "Enter a positive integer for n.";
+
+      document.getElementById("pError").textContent =
+        validP ? "" : "Enter a probability between 0 and 1.";
+
+      nInput.setAttribute("aria-invalid", String(!validN));
+      pInput.setAttribute("aria-invalid", String(!validP));
+
+      if (!validN || !validP) {
+        document.getElementById("status").textContent =
+          "Correct the invalid inputs to calculate statistics.";
+        document.getElementById("status").style.color = "#dc2626";
+        return;
+      }
+
+      document.getElementById("displayN").textContent = n;
+      document.getElementById("displayP").textContent = p;
+
+      // Binomial distribution statistics
+      const mean = n * p;
+      const variance = n * p * (1 - p);
+      const standardDeviation = Math.sqrt(variance);
+      const secondMoment = variance + mean * mean;
+
+      // Skewness is undefined when variance is zero.
+      const skewness = variance === 0
+        ? NaN
+        : (1 - 2 * p) / standardDeviation;
+
+      document.getElementById("mean").textContent =
+        formatNumber(mean);
+
+      document.getElementById("variance").textContent =
+        formatNumber(variance);
+
+      document.getElementById("stdDev").textContent =
+        formatNumber(standardDeviation);
+
+      document.getElementById("secondMoment").textContent =
+        formatNumber(secondMoment);
+
+      document.getElementById("skewness").textContent =
+        formatNumber(skewness);
+
+      document.getElementById("status").textContent =
+        "Statistics calculated successfully.";
+
+      document.getElementById("status").style.color = "#15803d";
+    }
+
+    nInput.addEventListener("input", validateAndCalculate);
+    pInput.addEventListener("input", validateAndCalculate);
+
+    // Calculate statistics for the default values.
+    validateAndCalculate();
+  </script>
+</body>
+</html>
+```
+
+## Default-value verification
+
+For \(n=20\) and \(p=0.35\):
+
+| Statistic | Result |
+|---|---:|
+| Mean | 7.000000 |
+| Variance | 4.550000 |
+| Standard deviation | 2.133073 |
+| Second moment \(E[X^2]\) | 53.550000 |
+| Skewness | 0.140028 |
+
+**Note:** When \(p=0\) or \(p=1\), the variance is zero and skewness is undefined, so the page displays “Undefined” rather than dividing by zero.
+
+**Current scope:** Parameter inputs, validation, selected-value display, and statistical calculations only. No simulation has been added.
